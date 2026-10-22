@@ -1,0 +1,66 @@
+[
+  {
+    "_id": "q1",
+    "question": "Which country is Paris the capital of?",
+    "answer": "France",
+    "supporting_facts": [
+      [
+        "Paris",
+        0
+      ]
+    ],
+    "context": [
+      [
+        "Paris",
+        [
+          "Paris is the capital of France.",
+          "It lies on the Seine."
+        ]
+      ],
+      [
+        "Berlin",
+        [
+          "Berlin is the capital of Germany."
+        ]
+      ],
+      [
+        "Everest",
+        [
+          "Mount Everest is the highest mountain on Earth."
+        ]
+      ]
+    ]
+  },
+  {
+    "_id": "q2",
+    "question": "Which city is the capital of Germany?",
+    "answer": "Berlin",
+    "supporting_facts": [
+      [
+        "Berlin",
+        0
+      ]
+    ],
+    "context": [
+      [
+        "Berlin",
+        [
+          "Berlin is the capital of Germany.",
+          "It is Germany's largest city."
+        ]
+      ],
+      [
+        "Paris",
+        [
+          "Paris is the capital of France."
+        ]
+      ],
+      [
+        "Everest",
+        [
+          "Mount Everest is the highest mountain on Earth."
+        ]
+      ]
+    ]
+  }
+]
