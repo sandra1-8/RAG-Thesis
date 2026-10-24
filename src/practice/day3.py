@@ -1,6 +1,8 @@
 import json
+import time
 from retrieval import retrieve, recall_at_k, mrr, precision_at_k
 from data_utils import build_gold, build_corpus
+from pathlib import Path
 data = [
     {
         "_id": "q1",
@@ -27,11 +29,12 @@ data = [
 ]
 
 # # Write it to a file
-# with open("data/toy_hotpot.json","w",encoding="utf-8") as f:
+ROOT = Path(__file__).resolve().parents[2] 
+# with open(ROOT/"data/toy_hotpot.json","w",encoding="utf-8") as f:
 #     json.dump(data,f,indent=2)
 
 # Read it back
-with open("data/toy_hotpot.json","r",encoding="utf-8") as f:
+with open(ROOT/"data/toy_hotpot.json","r",encoding="utf-8") as f:
     loaded = json.load(f)
 
 # item = loaded[0]
@@ -42,7 +45,14 @@ K = 3
 corpus = build_corpus(loaded)
 for item in loaded:
     gold = build_gold(item)
-    results = retrieve(item["question"], corpus, k=K)
+
+    start = time.perf_counter()
+    for _ in range(1000):
+        results = retrieve(item["question"], corpus, k=K)
+    end = time.perf_counter()
+    index_time = end - start
+    print("old retrieval time:", index_time, "seconds")
+
     print(item["question"])
     print(results)
     print("Gold:", gold)
