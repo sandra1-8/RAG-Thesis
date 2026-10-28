@@ -6,7 +6,7 @@ import copy
 from collections import Counter
 from pathlib import Path
 from data_utils import build_corpus,build_gold
-
+from retrieval import recall_at_k, precision_at_k, mrr
 
 STOPWORDS = {"is","the","of","a","in","what","where","which","it"}
 
@@ -35,6 +35,7 @@ class TinyIndex:
                 scores[d] = s
         return sorted(scores.items(),key=lambda x:x[1], reverse = True)[:k]
 
+
 ROOT = Path(__file__).resolve().parents[2] 
 
 with open(ROOT/"data/toy_hotpot.json","r",encoding="utf-8") as f:
@@ -52,11 +53,11 @@ corpus["Berlin_0_dup1"] = "Berlin is the capital of Germany."
 meta["Berlin_0_dup1"] = {"source":"Berlin_0","type":"duplicate"}
 
 # Typo versions
-corpus["Paris_0__typo1"] = "Paris is the captial of France."
-meta["Paris_0__typo1"] = {"source": "Paris_0", "type": "lexical", "severity": 1}
+corpus["Paris_0_typo1"] = "Paris is the captial of France."
+meta["Paris_0_typo1"] = {"source": "Paris_0", "type": "lexical", "severity": 1}
 
-corpus["Berlin_0__typo1"] = "Berln is the capitla of Germany."
-meta["Berlin_0__typo1"] = {"source": "Berlin_0", "type": "lexical", "severity": 2}
+corpus["Berlin_0_typo1"] = "Berln is the capitla of Germany."
+meta["Berlin_0_typo1"] = {"source": "Berlin_0", "type": "lexical", "severity": 2}
 
 clean_index = TinyIndex(clean_corpus)
 noisy_index = TinyIndex(corpus)
@@ -74,10 +75,18 @@ questions = ["Which country is Paris the capital of?","Which city is the capital
 # index_time = end - start
 
 # print("TinyIndex time:", index_time, "seconds")
+assert set(meta) <= set(corpus)
+
+def evaluate(index,q,gold,k):
+    results = index.search(q,k=k)
+    return (recall_at_k(results,gold),
+            precision_at_k(results,gold,k=k),
+            mrr(results,gold))
 
 for item in loaded:
     q = item["question"]
     gold = build_gold(item)
     print(q)
-    print("  clean:", clean_index.search(q, k=3))
-    print("  noisy:", noisy_index.search(q, k=3))
+    for k in (1,2,3):
+        print(f"  k={k} clean (R, P, MRR):", evaluate(clean_index, q, gold, k))
+        print(f"  k={k} noisy (R, P, MRR):", evaluate(noisy_index, q, gold, k))

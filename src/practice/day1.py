@@ -45,7 +45,7 @@ def retreive(question,corpus,k=3):
 question = "What is the capital of France?"
 # question = "Where is the Eiffel Tower?"
 results = retreive(question,corpus,k=3)
-print(results)
+# print(results)
 
 # Evaluation: which docs are the gold evidence?
 gold = {"d1"}
@@ -63,7 +63,7 @@ def mrr(results,gold):
         if doc_id in gold:
             return 1/rank
     return 0.0
-
-print("Recall@3", recall_at_k(results,gold))
-print("Precision@3", precision_at_k(results,gold))
-print("mrr", mrr(results,gold))
+if __name__ == "__main__":
+    print("Recall@3", recall_at_k(results,gold))
+    print("Precision@3", precision_at_k(results,gold))
+    print("mrr", mrr(results,gold))
