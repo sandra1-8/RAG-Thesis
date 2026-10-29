@@ -83,10 +83,11 @@ def evaluate(index,q,gold,k):
             precision_at_k(results,gold,k=k),
             mrr(results,gold))
 
-for item in loaded:
-    q = item["question"]
-    gold = build_gold(item)
-    print(q)
-    for k in (1,2,3):
-        print(f"  k={k} clean (R, P, MRR):", evaluate(clean_index, q, gold, k))
-        print(f"  k={k} noisy (R, P, MRR):", evaluate(noisy_index, q, gold, k))
+if __name__ == "__main__":
+    for item in loaded:
+        q = item["question"]
+        gold = build_gold(item)
+        print(q)
+        for k in (1,2,3):
+            print(f"  k={k} clean (R, P, MRR):", evaluate(clean_index, q, gold, k))
+            print(f"  k={k} noisy (R, P, MRR):", evaluate(noisy_index, q, gold, k))
